@@ -25,3 +25,7 @@ monitoring:
 # chart: loki-distributed
 logging:
   enable: false
+
+# chart: k8spacket
+k8spacket:
+  enable: false
