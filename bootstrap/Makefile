@@ -1,0 +1,2 @@
+all:
+	helm template .

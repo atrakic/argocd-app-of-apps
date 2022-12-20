@@ -1,0 +1,32 @@
+{{- if .Values.storage.local.enable }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: localpath
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+ project: default
+ source:
+  repoURL: 'https://github.com/rancher/local-path-provisioner.git'
+  path: deploy/chart/local-path-provisioner
+  targetRevision: HEAD
+  helm:
+    parameters:
+        - name: rbac.create
+          value: "true"
+        {{- if .Values.storage.local.nodeSelector }}
+        - name: nodeSelector
+          value: {{ .Values.storage.local.nodeSelector }}
+        {{- end }}
+ destination:
+  server: {{ .Values.spec.destination.server }}
+  namespace: local-path-storage
+ syncPolicy:
+  automated: {}
+  syncOptions:
+    - CreateNamespace=true
+{{- end }}

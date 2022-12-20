@@ -1,0 +1,6 @@
+# Default values for bootstrap.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates
+
+# FQDN to use for sites
+domain: foo.bar

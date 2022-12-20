@@ -1,0 +1,72 @@
+{{- if .Values.monitoring.enable }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: monitoring
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: 'https://prometheus-community.github.io/helm-charts'
+    targetRevision: 43.1.1
+    helm:
+      skipCrds: true
+      values: |
+        # https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml#L140
+        alertmanager:
+          enabled: false
+        # https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml#L1963
+        prometheus:
+          ingress:
+            enabled: true
+            ingressClassName: nginx
+            pathType: ImplementationSpecific
+          # https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml#L2333
+          prometheusSpec:
+            retention: {{ .Values.monitoring.retention }}
+            resources:
+              requests:
+                cpu: 200m
+                memory: 200Mi
+            storageSpec:
+              volumeClaimTemplate:
+                spec:
+                  storageClassName: {{ .Values.monitoring.storageClass }}
+                  accessModes: ["ReadWriteOnce"]
+                  resources:
+                    requests:
+                      storage: {{ .Values.monitoring.storageSize }}
+        grafana:
+          ingress:
+            enabled: true
+            ingressClassName: nginx
+            pathType: ImplementationSpecific
+          service:
+            type: ClusterIP
+          {{- if .Values.logging.enable }}
+          # https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml#L840
+          additionalDataSources:
+            - name: loki
+              type: loki
+              url: http://loki.observability.svc.cluster.local:3100
+         {{- end }}
+        ## Component scraping kubeDns. Use either this or coreDns
+        coreDNS:
+          enabled: false
+        kubeDNS:
+          enabled=true
+        kubeEtcd:
+          enabled=false
+    chart: kube-prometheus-stack
+  destination:
+    server: {{ .Values.spec.destination.server }}
+    namespace: monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+{{- end }}

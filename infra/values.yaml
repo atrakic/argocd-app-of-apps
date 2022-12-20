@@ -1,0 +1,27 @@
+spec:
+  destination:
+    server: https://kubernetes.default.svc
+  source:
+    repoURL: https://github.com/atrakic/argocd-app-of-apps.git
+    targetRevision: HEAD
+
+# chart: bootstrap
+domain:  foo.bar
+
+# chart: local-path-provisioner
+storage:
+  local:
+    enable: true
+    nodeSelector: local-path-provisioner=true
+
+# chart: kube-prom-stack
+monitoring:
+  enable: true
+  storageClass: "local-path"
+  pdkey:
+  storageSize: 1Gi
+  retention: 2d
+
+# chart: loki-distributed
+logging:
+  enable: false
