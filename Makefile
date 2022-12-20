@@ -2,6 +2,8 @@ MAKEFLAGS += --silent
 
 SERVER := 127.0.0.1:8080
 
+APP ?= demo
+
 .DEFAULT_GOAL := help
 
 all: kind setup port_forward test status ## Do all

@@ -6,7 +6,7 @@ spec:
     targetRevision: HEAD
 
 # chart: bootstrap
-domain:  foo.bar
+domain:  argo.local
 
 # chart: local-path-provisioner
 storage:

@@ -40,13 +40,13 @@ jobs:
       - name: Ensure port forward works
         run: curl -fiskL 127.0.0.1:8080
 
-      - name: Deploy infra
+      - name: ArgoCD deploy k8s infra
         run: |
           APP=infra make sync
 
-      - name: Deploy apps
+      - name: ArgoCD deploy demo apps
         run: |
-          APP=apps make sync
+          APP=demo make sync
 
       - name: Get ArgoCD status
         run: make status
