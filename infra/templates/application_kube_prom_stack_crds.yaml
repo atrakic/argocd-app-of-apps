@@ -10,7 +10,7 @@ metadata:
 spec:
   destination:
     server: {{ .Values.spec.destination.server }}
-    namespace: observability
+    namespace: monitoring
   project: default
   source:
     repoURL: https://github.com/prometheus-community/helm-charts.git
