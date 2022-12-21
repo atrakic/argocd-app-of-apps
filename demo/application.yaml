@@ -12,7 +12,7 @@ spec:
   project: default
   source:
     path: apps
-    repoURL: https://github.com/atrakic/argocd-example-apps
+    repoURL: https://github.com/atrakic/argocd-example-apps.git
     targetRevision: HEAD
   syncPolicy:
     automated:
