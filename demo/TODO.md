@@ -1,1 +1,0 @@
-- Create chart with apps

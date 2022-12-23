@@ -1,23 +1,19 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: demo
+  name: infra
   namespace: argocd
-  finalizers:
-  - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
     namespace: argocd
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: apps
-    repoURL: https://github.com/atrakic/argocd-example-apps.git
+    path: infra
+    repoURL: https://github.com/atrakic/argocd-app-of-apps
     targetRevision: HEAD
   syncPolicy:
     automated:
       selfHeal: true
-      prune: true
-      allowEmpty: true
     syncOptions:
     - CreateNamespace=true

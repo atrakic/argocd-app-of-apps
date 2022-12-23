@@ -12,12 +12,13 @@ domain:  argo.local
 storage:
   local:
     enable: true
-    nodeSelector: local-path-provisioner=true
+    #nodeSelector: local-path-provisioner=true
 
 # chart: kube-prom-stack
 monitoring:
   enable: true
-  storageClass: "local-path"
+  # kubectl get storageclass
+  storageClass: standard # "local-path"
   pdkey:
   storageSize: 1Gi
   retention: 2d

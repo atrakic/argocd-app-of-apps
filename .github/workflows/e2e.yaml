@@ -2,9 +2,13 @@ name: e2e
 
 on:
   workflow_dispatch:
+  pull_request:
   push:
     branches: [ '*' ]
     tags-ignore: [ '*' ]
+
+env:
+  APP: guestbook
 
 jobs:
   kind-e2e:
@@ -44,9 +48,16 @@ jobs:
         run: |
           APP=infra make sync
 
-      - name: ArgoCD deploy demo apps
+      - name: ArgoCD deploy e2e app
         run: |
-          APP=demo make sync
+          APP=${{ env.APP }} make sync
+
+      - name: Wait for e2e app to sattle after deployment
+        if: false
+        run: kubectl wait --for=condition=Ready pods --all --all-namespaces --timeout=300s
+
+      - name: Test e2e app
+        run: APP=${{ env.APP }} make test
 
       - name: Get ArgoCD status
         run: make status
