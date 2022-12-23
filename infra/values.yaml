@@ -11,7 +11,7 @@ domain:  argo.local
 # chart: local-path-provisioner
 storage:
   local:
-    enable: true
+    enable: false
     #nodeSelector: local-path-provisioner=true
 
 # chart: kube-prom-stack
