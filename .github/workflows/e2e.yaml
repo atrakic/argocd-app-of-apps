@@ -44,13 +44,9 @@ jobs:
       - name: Ensure port forward works
         run: curl -fiskL 127.0.0.1:8080
 
-      - name: ArgoCD deploy k8s infra
+      - name: ArgoCD deploy root
         run: |
-          APP=infra make sync
-
-      - name: ArgoCD deploy e2e app
-        run: |
-          APP=${{ env.APP }} make sync
+          APP=root make sync
 
       - name: Wait for e2e app to sattle after deployment
         if: false

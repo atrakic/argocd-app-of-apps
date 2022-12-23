@@ -2,7 +2,7 @@ MAKEFLAGS += --silent
 
 SERVER := 127.0.0.1:8080
 
-APP ?= guestbook
+APP ?= root
 
 .DEFAULT_GOAL := help
 
@@ -22,7 +22,7 @@ status: ## Status
 	argocd --server $(SERVER) --insecure app list
 
 sync deploy: login ## Deploy application and sync
-	kubectl apply -f apps/$(APP).yaml
+	kubectl apply -f $(APP).yaml
 	argocd --server $(SERVER) --insecure app sync $(APP)
 	argocd --server $(SERVER) --insecure app wait $(APP)
 	argocd --server $(SERVER) --insecure app get $(APP)
