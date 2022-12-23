@@ -6,7 +6,7 @@ APP ?= root
 
 .DEFAULT_GOAL := help
 
-all: kind setup port_forward test status ## Do all
+all: kind setup port_forward deploy test status ## Do all
 
 kind:
 	kind create cluster --config config/kind.yaml --wait 60s || true
@@ -27,6 +27,7 @@ sync deploy: login ## Deploy application and sync
 	argocd --server $(SERVER) --insecure app sync $(APP)
 	argocd --server $(SERVER) --insecure app wait $(APP)
 	argocd --server $(SERVER) --insecure app get $(APP)
+	sleep 1
 
 port_forward: ## Port forward
 	scripts/argocd/port_forward.sh &
@@ -35,7 +36,8 @@ port_forward: ## Port forward
 login: ## ArgoCD Login
 	scripts/argocd/login.sh
 
-test: sync ## Test app
+test: ## Test app
+	kubectl wait -n guestbook --for=condition=Ready pods --all --timeout=300s
 	[ -f ./tests/test.sh ] && ./tests/test.sh guestbook.argocd.local
 
 clean: ## Clean

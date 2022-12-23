@@ -1,5 +1,4 @@
 name: e2e
-
 on:
   workflow_dispatch:
   pull_request:
@@ -45,12 +44,11 @@ jobs:
         run: curl -fiskL 127.0.0.1:8080
 
       - name: ArgoCD deploy app of apps
-        run: APP=root make sync
+        run: make deploy
 
       - name: Wait for e2e app to sattle after deployment
-        if: false
-        run: kubectl wait -n guestbook --for=condition=Ready pods --timeout=300s -l "app=helm-guestbook"
-        # kubectl wait --for=condition=Ready pods --all --all-namespaces --timeout=300s
+        #run: kubectl wait -n guestbook --for=condition=Ready pods --timeout=300s -l "app=helm-guestbook"
+        run: kubectl wait -n guestbook --for=condition=Ready pods --all --timeout=300s
 
       - name: Test e2e app
         run: make test
@@ -70,5 +68,5 @@ jobs:
       - name: Debug failure
         if: failure()
         run: |
-          kubectl get ns,cm,sa,ValidatingWebhookConfiguration -A
+          kubectl get ns,po,svc,cm,sa,ValidatingWebhookConfiguration -A
           kubectl get events --sort-by='.metadata.creationTimestamp' -A
