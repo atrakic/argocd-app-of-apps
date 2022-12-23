@@ -10,7 +10,7 @@ targetRevision="${4:-HEAD}"
 server="${5:-{{ .Values.spec.destination.server }}}"
 project="${6:-{{ .Values.spec.project }}}"
 
-# https://github.com/argoproj/argo-cd/blob/master/manifests/crds/application-crd.yam
+# https://github.com/argoproj/argo-cd/blob/master/manifests/crds/application-crd.yaml
 tee apps/templates/"${name}.yaml"<<EOF
 apiVersion: argoproj.io/v1alpha1
 kind: Application

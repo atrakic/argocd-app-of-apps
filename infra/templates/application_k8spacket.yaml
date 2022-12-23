@@ -1,4 +1,4 @@
-{{- if .Values.k8spacket.enable }}
+{{- if .Values.k8spacket.enabled }}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:

@@ -69,5 +69,5 @@ jobs:
       - name: Debug failure
         if: failure()
         run: |
-          kubectl get all -A
+          kubectl get all,cm,sa,ValidatingWebhookConfiguration -A
           kubectl get events --sort-by='.metadata.creationTimestamp' -A

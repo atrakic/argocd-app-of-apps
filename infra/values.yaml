@@ -1,4 +1,5 @@
 spec:
+  project: default
   destination:
     server: https://kubernetes.default.svc
   source:
@@ -11,22 +12,24 @@ domain:  argo.local
 # chart: local-path-provisioner
 storage:
   local:
-    enable: false
+    enabled: false
     #nodeSelector: local-path-provisioner=true
 
 # chart: kube-prom-stack
 monitoring:
-  enable: true
+  enabled: true
+  namespace: monitoring
+  prometheusSpec: {}
   # kubectl get storageclass
-  storageClass: standard # "local-path"
-  pdkey:
-  storageSize: 1Gi
-  retention: 2d
+  #storageClass: standard # "local-path"
+  #pdkey:
+  #storageSize: 1Gi
+  #retention: 2d
 
 # chart: loki-distributed
 logging:
-  enable: false
+  enabled: false
 
 # chart: k8spacket
 k8spacket:
-  enable: false
+  enabled: false

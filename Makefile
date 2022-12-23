@@ -17,6 +17,7 @@ setup: ## Setup kinD with ArgoCD + Nginx Ingress
 	kubectl cluster-info
 	scripts/argocd/up.sh
 	scripts/ingress/up.sh
+	argocd version
 
 status: ## Status
 	argocd --server $(SERVER) --insecure app list

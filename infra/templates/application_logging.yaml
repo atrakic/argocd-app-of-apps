@@ -1,4 +1,4 @@
-{{- if .Values.logging.enable }}
+{{- if .Values.logging.enabled }}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
