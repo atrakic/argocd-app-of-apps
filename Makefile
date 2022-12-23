@@ -35,7 +35,7 @@ login: ## ArgoCD Login
 	scripts/argocd/login.sh
 
 test: sync ## Test app
-	[ -f ./tests/test.sh ] && ./tests/test.sh $(APP).argocd.local
+	[ -f ./tests/test.sh ] && ./tests/test.sh guestbook.argocd.local
 
 clean: ## Clean
 	kind delete cluster
