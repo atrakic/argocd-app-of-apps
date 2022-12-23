@@ -2,6 +2,10 @@ kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
 - role: control-plane
+  # https://gist.github.com/mauilion/1b5727f42d181f36bb934656fa50459a
+  extraMounts:
+    - hostPath: ./shared
+      containerPath: /tmp/shared
   kubeadmConfigPatches:
   - |
     kind: InitConfiguration

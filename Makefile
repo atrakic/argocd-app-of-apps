@@ -2,7 +2,7 @@ MAKEFLAGS += --silent
 
 SERVER := 127.0.0.1:8080
 
-APP ?= demo
+APP ?= guestbook
 
 .DEFAULT_GOAL := help
 
@@ -10,6 +10,7 @@ all: kind setup port_forward test status ## Do all
 
 kind:
 	kind create cluster --config config/kind.yaml --wait 60s || true
+	kind version
 
 setup: ## Setup kinD with ArgoCD + Nginx Ingress
 	kubectl wait --for=condition=Ready pods --all --all-namespaces --timeout=300s
@@ -20,10 +21,11 @@ setup: ## Setup kinD with ArgoCD + Nginx Ingress
 status: ## Status
 	argocd --server $(SERVER) --insecure app list
 
-sync: login ## Deploy application and sync
-	kubectl apply -f $(APP)/application.yaml
+sync deploy: login ## Deploy application and sync
+	kubectl apply -f apps/$(APP).yaml
 	argocd --server $(SERVER) --insecure app sync $(APP)
 	argocd --server $(SERVER) --insecure app wait $(APP)
+	argocd --server $(SERVER) --insecure app get $(APP)
 
 port_forward: ## Port forward
 	scripts/argocd/port_forward.sh &
@@ -33,7 +35,7 @@ login: ## ArgoCD Login
 	scripts/argocd/login.sh
 
 test: sync ## Test app
-	[ -f ./tests/test.sh ] && ./tests/test.sh $(APP)
+	[ -f ./tests/test.sh ] && ./tests/test.sh $(APP).argocd.local
 
 clean: ## Clean
 	kind delete cluster
