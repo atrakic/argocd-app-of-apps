@@ -25,9 +25,11 @@ status: ## Status
 sync deploy: login ## Deploy application and sync
 	kubectl apply -f $(APP).yaml
 	argocd --server $(SERVER) --insecure app sync $(APP)
-	argocd --server $(SERVER) --insecure app wait $(APP)
+	argocd --server $(SERVER) --insecure app wait $(APP) infra bootstrap
 	argocd --server $(SERVER) --insecure app get $(APP)
-	sleep 1
+
+undeploy: login ## Deploy application and sync
+	argocd --server $(SERVER) --insecure app delete -y $(APP)
 
 port_forward: ## Port forward
 	scripts/argocd/port_forward.sh &
@@ -37,7 +39,7 @@ login: ## ArgoCD Login
 	scripts/argocd/login.sh
 
 test: ## Test app
-	kubectl wait -n guestbook --for=condition=Ready pods --all --timeout=300s
+	argocd --server $(SERVER) --insecure app wait $(APP) guestbook
 	[ -f ./tests/test.sh ] && ./tests/test.sh guestbook.argocd.local
 
 clean: ## Clean
@@ -46,6 +48,6 @@ clean: ## Clean
 help:  ## Display this help menu
 	awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z_0-9-]+:.*?##/ { printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
 
-.PHONY: help clean test sync login status kind all
+.PHONY: help clean test sync deploy login status kind all
 
 -include include.mk
