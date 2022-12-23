@@ -48,7 +48,7 @@ jobs:
         run: APP=root make sync
 
       - name: Wait for e2e app to sattle after deployment
-        run:  k wait  -n guestbook --for=condition=Ready pods --timeout=300s -l "app=helm-guestbook"
+        run: kubectl wait-n guestbook --for=condition=Ready pods --timeout=300s -l "app=helm-guestbook"
         # kubectl wait --for=condition=Ready pods --all --all-namespaces --timeout=300s
 
       - name: Test e2e app
