@@ -7,8 +7,8 @@ name="${1:?Application name?}"
 repoURL="${2:?Application repoURL?}"
 path="${3:?Application path}"
 targetRevision="${4:-HEAD}"
-server="${5:-https://kubernetes.default.svc}"
-project="${6:-default}"
+server="${5:-{{ .Values.spec.destination.server }}}"
+project="${6:-{{ .Values.spec.project }}}"
 
 # https://github.com/argoproj/argo-cd/blob/master/manifests/crds/application-crd.yam
 tee apps/templates/"${name}.yaml"<<EOF

@@ -7,7 +7,7 @@ spec:
   destination:
     namespace: argocd
     server: {{ .Values.spec.destination.server }}
-  project: {{ .Values.spec.destination.project }}
+  project: {{ .Values.spec.project }}
   source:
     path: infra
     repoURL: https://github.com/atrakic/argocd-app-of-apps

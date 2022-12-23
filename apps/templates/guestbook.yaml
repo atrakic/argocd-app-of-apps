@@ -9,7 +9,7 @@ spec:
   destination:
     namespace: guestbook
     server: {{ .Values.spec.destination.server }}
-  project: {{ .Values.spec.destination.project }}
+  project: {{ .Values.spec.project }}
   source:
     path: helm-guestbook
     repoURL: https://github.com/atrakic/argocd-example-apps
