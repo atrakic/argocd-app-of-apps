@@ -48,6 +48,7 @@ jobs:
         run: APP=root make sync
 
       - name: Wait for e2e app to sattle after deployment
+        if: false
         run: kubectl wait -n guestbook --for=condition=Ready pods --timeout=300s -l "app=helm-guestbook"
         # kubectl wait --for=condition=Ready pods --all --all-namespaces --timeout=300s
 
@@ -69,5 +70,5 @@ jobs:
       - name: Debug failure
         if: failure()
         run: |
-          kubectl get all,cm,sa,ValidatingWebhookConfiguration -A
+          kubectl get ns,cm,sa,ValidatingWebhookConfiguration -A
           kubectl get events --sort-by='.metadata.creationTimestamp' -A
