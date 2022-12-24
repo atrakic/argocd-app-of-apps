@@ -7,7 +7,7 @@ spec:
  project: default
  source:
   repoURL: "https://github.com/atrakic/argocd-app-of-apps"
-  targetRevision: develop # "HEAD"
+  targetRevision: "HEAD" # develop
   path: apps
  destination:
   server: "https://kubernetes.default.svc"
