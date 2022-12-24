@@ -4,6 +4,9 @@ on:
   pull_request:
   push:
     branches: [ '*' ]
+    paths-ignore:
+      - '**/docs'
+      - '**/README.md'
     tags-ignore: [ '*' ]
 
 jobs:
