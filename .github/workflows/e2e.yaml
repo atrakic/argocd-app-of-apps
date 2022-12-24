@@ -20,7 +20,7 @@ jobs:
       - name: Set up Homebrew
         uses: Homebrew/actions/setup-homebrew@master
 
-      - name: Install tools incl. ArgoCD cli
+      - name: Install tools
         run: brew bundle
 
       - name: KinD
@@ -40,10 +40,10 @@ jobs:
           make setup
           make port_forward
 
-      - name: Ensure port forward works
+      - name: Ensure port forward
         run: curl -fiskL 127.0.0.1:8080
 
-      - name: ArgoCD deploy app of apps
+      - name: ArgoCD deploy
         run: make deploy
 
       - name: Wait for e2e app to sattle after deployment
@@ -57,6 +57,7 @@ jobs:
       - name: Get ArgoCD status
         run: make status
 
+# kind setup port_forward deploy test status
       - name: Check if working tree is dirty
         if: always()
         run: |

@@ -19,8 +19,8 @@ setup: ## Setup kinD with ArgoCD + Nginx Ingress
 	scripts/ingress/up.sh
 
 status: ## Status
-	argocd --server $(SERVER) --insecure app list
 	argocd version
+	argocd --server $(SERVER) --insecure app list
 
 sync deploy: login ## Deploy application and sync
 	kubectl apply -f $(APP).yaml
