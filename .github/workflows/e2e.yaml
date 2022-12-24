@@ -6,9 +6,6 @@ on:
     branches: [ '*' ]
     tags-ignore: [ '*' ]
 
-env:
-  APP: guestbook
-
 jobs:
   kind-e2e:
     runs-on: ubuntu-latest
