@@ -6,8 +6,8 @@ metadata:
 spec:
   destination:
     namespace: argocd
-    server: https://kubernetes.default.svc
-  project: default
+    server: {{ .Values.spec.destination.server }}
+  project: {{ .Values.spec.project }}
   source:
     path: infra
     repoURL: https://github.com/atrakic/argocd-app-of-apps

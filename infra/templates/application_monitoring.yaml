@@ -1,21 +1,26 @@
-{{- if .Values.monitoring.enable }}
+{{- if .Values.monitoring.enabled }}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: monitoring
-  namespace: argocd
+  namespace: {{ .Values.spec.namespace }}
   annotations:
     argocd.argoproj.io/sync-wave: "1"
   finalizers:
-  - resources-finalizer.argocd.argoproj.io
+    - resources-finalizer.argocd.argoproj.io
 spec:
-  project: default
+  destination:
+    server: {{ .Values.spec.destination.server }}
+    namespace: {{ .Values.monitoring.namespace }}
+  project: {{ .Values.spec.project }}
   source:
-    repoURL: 'https://prometheus-community.github.io/helm-charts'
-    targetRevision: 43.1.1
+    repoURL: {{ .Values.monitoring.repoURL }}
+    targetRevision: {{ .Values.monitoring.targetRevision }}
+    #directory:
+    #  recurse: true
     helm:
       skipCrds: true
-      values: |
+      values: |-
         # https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml#L140
         alertmanager:
           enabled: false
@@ -25,48 +30,32 @@ spec:
             enabled: true
             ingressClassName: nginx
             pathType: ImplementationSpecific
-          # https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml#L2333
-          prometheusSpec:
-            retention: {{ .Values.monitoring.retention }}
-            resources:
-              requests:
-                cpu: 200m
-                memory: 200Mi
-            storageSpec:
-              volumeClaimTemplate:
-                spec:
-                  storageClassName: {{ .Values.monitoring.storageClass }}
-                  accessModes: ["ReadWriteOnce"]
-                  resources:
-                    requests:
-                      storage: {{ .Values.monitoring.storageSize }}
+            hosts:
+              - prometheus.local
         grafana:
-          ingress:
-            enabled: true
-            ingressClassName: nginx
-            pathType: ImplementationSpecific
-          service:
-            type: ClusterIP
-          {{- if .Values.logging.enable }}
-          # https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml#L840
-          additionalDataSources:
-            - name: loki
-              type: loki
-              url: http://loki.monitoring.svc.cluster.local:3100
-         {{- end }}
-        ## Component scraping kubeDns. Use either this or coreDns
-        coreDNS:
-          enabled: false
-        kubeDNS:
-          enabled=true
-        kubeEtcd:
-          enabled=false
-    chart: kube-prometheus-stack
-  destination:
-    server: {{ .Values.spec.destination.server }}
-    namespace: monitoring
+            enabled: false
+            ingress:
+              enabled: false
+              ingressClassName: nginx
+              pathType: ImplementationSpecific
+              hosts:
+                - grafana.local
+            service:
+              type: ClusterIP
+            {{- if .Values.logging.enabled }}
+            # https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml#L840
+            additionalDataSources:
+              - name: loki
+                type: loki
+                url: http://loki.monitoring.svc.cluster.local:3100
+           {{- end }}
+    chart: {{ .Values.monitoring.chart }}
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - Replace=true
+      - PruneLast=true
 {{- end }}

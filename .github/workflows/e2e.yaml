@@ -1,14 +1,13 @@
 name: e2e
-
 on:
   workflow_dispatch:
   pull_request:
   push:
     branches: [ '*' ]
+    paths-ignore:
+      - '**/docs'
+      - '**/README.md'
     tags-ignore: [ '*' ]
-
-env:
-  APP: guestbook
 
 jobs:
   kind-e2e:
@@ -21,7 +20,7 @@ jobs:
       - name: Set up Homebrew
         uses: Homebrew/actions/setup-homebrew@master
 
-      - name: Install tools incl. ArgoCD cli
+      - name: Install tools
         run: brew bundle
 
       - name: KinD
@@ -41,27 +40,24 @@ jobs:
           make setup
           make port_forward
 
-      - name: Ensure port forward works
+      - name: Ensure port forward
         run: curl -fiskL 127.0.0.1:8080
 
-      - name: ArgoCD deploy k8s infra
-        run: |
-          APP=infra make sync
-
-      - name: ArgoCD deploy e2e app
-        run: |
-          APP=${{ env.APP }} make sync
+      - name: ArgoCD deploy
+        run: make deploy
 
       - name: Wait for e2e app to sattle after deployment
         if: false
-        run: kubectl wait --for=condition=Ready pods --all --all-namespaces --timeout=300s
+        #run: kubectl wait -n guestbook --for=condition=Ready pods --timeout=300s -l "app=helm-guestbook"
+        run: kubectl wait -n guestbook --for=condition=Ready pods --all --timeout=300s
 
       - name: Test e2e app
-        run: APP=${{ env.APP }} make test
+        run: make test
 
       - name: Get ArgoCD status
         run: make status
 
+# kind setup port_forward deploy test status
       - name: Check if working tree is dirty
         if: always()
         run: |
@@ -74,5 +70,5 @@ jobs:
       - name: Debug failure
         if: failure()
         run: |
-          kubectl get all -A
+          kubectl get ns,po,svc,cm,sa,ValidatingWebhookConfiguration -A
           kubectl get events --sort-by='.metadata.creationTimestamp' -A
