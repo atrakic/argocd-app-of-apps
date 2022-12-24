@@ -1,17 +1,17 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: cert-manager
-  namespace: argocd
+  name: {{ .Values.certManager.chart }}
+  namespace: {{ .Values.spec.namespace }}
   annotations:
     argocd.argoproj.io/sync-wave: "-2"
   finalizers:
-  - resources-finalizer.argocd.argoproj.io
+    - resources-finalizer.argocd.argoproj.io
 spec:
-  project: default
+  project: {{ .Values.spec.project }}
   source:
-    repoURL: 'https://charts.jetstack.io'
-    targetRevision: v1.10.1
+    repoURL: {{ .Values.certManager.repoURL }}
+    targetRevision: {{ .Values.certManager.targetRevision }}
     helm:
       parameters:
         - name: installCRDs
@@ -20,10 +20,10 @@ spec:
           value: 'false'
         - name: prometheus.servicemonitor.honorLabels
           value: 'true'
-    chart: cert-manager
+    chart: {{ .Values.certManager.chart }}
   destination:
     server: {{ .Values.spec.destination.server }}
-    namespace: cert-manager
+    namespace: {{ .Values.certManager.namespace }}
   syncPolicy:
     automated: {}
     syncOptions:

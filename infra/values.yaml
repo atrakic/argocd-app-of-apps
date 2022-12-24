@@ -1,35 +1,87 @@
 spec:
   project: default
+  namespace: argocd
   destination:
     server: https://kubernetes.default.svc
   source:
     repoURL: https://github.com/atrakic/argocd-app-of-apps.git
     targetRevision: HEAD
 
-# chart: bootstrap
-domain:  argo.local
+## Local chart
+bootstrap:
+  domain:  argo.local
 
-# chart: local-path-provisioner
-storage:
-  local:
-    enabled: false
-    #nodeSelector: local-path-provisioner=true
+##
+certManager:
+  chart: cert-manager
+  repoURL: 'https://charts.jetstack.io'
+  enabled: true
+  namespace: cert-manager
+  targetRevision: v1.10.1
+  helm:
+    parameters: []
 
-# chart: kube-prom-stack
+nginx:
+  chart: ingress-nginx
+  repoURL: 'https://kubernetes.github.io/ingress-nginx'
+  enabled: false
+  namespace: ingress-nginx
+  targetRevision: 0.15.2
+  helm:
+    parameters: []
+
 monitoring:
+  chart: kube-prometheus-stack
+  repoURL: 'https://prometheus-community.github.io/helm-charts'
   enabled: true
   namespace: monitoring
-  prometheusSpec: {}
-  # kubectl get storageclass
-  #storageClass: standard # "local-path"
-  #pdkey:
-  #storageSize: 1Gi
-  #retention: 2d
+  targetRevision: 43.1.1
+  helm:
+    parameters: []
 
-# chart: loki-distributed
+monitoringCrds:
+  chart: kube-prometheus-stack-crds
+  repoURL: 'https://github.com/prometheus-community/helm-charts.git'
+  enabled: true
+  namespace: monitoring
+  targetRevision: kube-prometheus-stack-43.1.1
+  helm:
+    parameters: []
+
+# TODO: disabled ###
 logging:
+  chart: loki-distributed
+  repoURL: 'https://grafana.github.io/helm-charts'
   enabled: false
+  namespace: monitoring
+  targetRevision: 0.67.0
+  helm:
+    parameters: []
 
-# chart: k8spacket
-k8spacket:
+storage:
+  chart: local-path-provisioner
+  repoURL: 'https://github.com/rancher/local-path-provisioner.git'
   enabled: false
+  namespace: local-path-storage
+  targetRevision: HEAD
+  helm:
+    parameters: []
+  #nodeSelector: local-path-provisioner=true
+
+k8spacket:
+  chart: k8spacket
+  repoURL: 'https://k8spacket.github.io/k8spacket-helm-chart'
+  enabled: false
+  namespace: k8spacket
+  targetRevision: v1.0.0
+  helm:
+    parameters: []
+
+sealedSecrets:
+  chart:
+  repoURL:
+  enabled: false
+  namespace:
+  targetRevision:
+  helm:
+    parameters: []

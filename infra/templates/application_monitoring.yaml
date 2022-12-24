@@ -3,7 +3,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: monitoring
-  namespace: argocd
+  namespace: {{ .Values.spec.namespace }}
   annotations:
     argocd.argoproj.io/sync-wave: "1"
   finalizers:
@@ -11,11 +11,11 @@ metadata:
 spec:
   destination:
     server: {{ .Values.spec.destination.server }}
-    namespace: monitoring
+    namespace: {{ .Values.monitoring.namespace }}
   project: {{ .Values.spec.project }}
   source:
-    repoURL: 'https://prometheus-community.github.io/helm-charts'
-    targetRevision: 43.1.1
+    repoURL: {{ .Values.monitoring.repoURL }}
+    targetRevision: {{ .Values.monitoring.targetRevision }}
     #directory:
     #  recurse: true
     helm:
@@ -49,13 +49,13 @@ spec:
                 type: loki
                 url: http://loki.monitoring.svc.cluster.local:3100
            {{- end }}
-    chart: kube-prometheus-stack
+    chart: {{ .Values.monitoring.chart }}
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
-      # - Replace=true
-      # - PruneLast=true
+      - Replace=true
+      - PruneLast=true
 {{- end }}

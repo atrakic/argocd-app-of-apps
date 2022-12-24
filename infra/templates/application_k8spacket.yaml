@@ -2,24 +2,23 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: k8spacket
-  namespace: argocd
+  name: {{ .Values.k8spacket.chart }}
+  namespace: {{ .Values.spec.namespace }}
   annotations:
     argocd.argoproj.io/sync-wave: "-2"
   finalizers:
-  - resources-finalizer.argocd.argoproj.io
+    - resources-finalizer.argocd.argoproj.io
 spec:
-  project: default
+  project: {{ .Values.spec.project }}
   source:
-    repoURL: 'https://k8spacket.github.io/k8spacket-helm-chart'
-    targetRevision: v1.0.0
-    helm:
-      # helm show values k8spacket/k8spacket
-      parameters: {}
-    chart: k8spacket
+    repoURL: {{ .Values.k8spacket.repoURL }}
+    targetRevision: {{ .Values.k8spacket.targetRevision }}
+    #helm:
+    #  parameters: {}
+    chart: {{ .Values.k8spacket.chart }}
   destination:
     server: {{ .Values.spec.destination.server }}
-    namespace: k8spacket
+    namespace: {{ .Values.k8spacket.namespace }}
   syncPolicy:
     automated: {}
     syncOptions:
