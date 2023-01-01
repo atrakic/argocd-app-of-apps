@@ -48,7 +48,6 @@ jobs:
 
       - name: Wait for e2e app to sattle after deployment
         if: false
-        #run: kubectl wait -n guestbook --for=condition=Ready pods --timeout=300s -l "app=helm-guestbook"
         run: kubectl wait -n guestbook --for=condition=Ready pods --all --timeout=300s
 
       - name: Test e2e app
@@ -57,7 +56,6 @@ jobs:
       - name: Get ArgoCD status
         run: make status
 
-# kind setup port_forward deploy test status
       - name: Check if working tree is dirty
         if: always()
         run: |
