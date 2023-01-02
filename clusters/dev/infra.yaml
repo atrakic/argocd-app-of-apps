@@ -6,12 +6,14 @@ metadata:
 spec:
   destination:
     namespace: argocd
-    server: {{ .Values.spec.destination.server }}
-  project: {{ .Values.spec.project }}
+    server: https://kubernetes.default.svc
+  project: default
   source:
-    path: infra
-    repoURL: https://github.com/atrakic/argocd-app-of-apps
-    targetRevision: HEAD
+    #path: infra
+    chart: infra
+    repoURL: https://atrakic.github.io/helm-charts
+    #targetRevision: HEAD
+    targetRevision: 0.1.0
   syncPolicy:
     automated:
       selfHeal: true

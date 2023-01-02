@@ -23,9 +23,10 @@ status: ## Status
 	argocd --server $(SERVER) --insecure app list
 
 sync deploy: login ## Deploy application and sync
-	kubectl apply -f $(APP).yaml
+	kubectl apply -f application.yaml
 	argocd --server $(SERVER) --insecure app sync $(APP)
 	argocd --server $(SERVER) --insecure app wait $(APP) infra bootstrap
+	#argocd --server $(SERVER) --insecure app wait monitoring
 	argocd --server $(SERVER) --insecure app get $(APP)
 
 undeploy: login ## Deploy application and sync
@@ -40,7 +41,7 @@ login: ## ArgoCD Login
 
 test: ## Test app
 	argocd --server $(SERVER) --insecure app wait $(APP) guestbook
-	[ -f ./tests/test.sh ] && ./tests/test.sh guestbook.argocd.local
+	[ -f ./test.sh ] && ./test.sh guestbook.argocd.local
 
 clean: ## Clean
 	kind delete cluster

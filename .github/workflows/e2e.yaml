@@ -47,7 +47,7 @@ jobs:
         run: make deploy
 
       - name: Wait for e2e app to sattle after deployment
-        if: false
+        #if: false
         run: kubectl wait -n guestbook --for=condition=Ready pods --all --timeout=300s
 
       - name: Test e2e app
@@ -69,4 +69,8 @@ jobs:
         if: failure()
         run: |
           kubectl get ns,po,svc,cm,sa,ValidatingWebhookConfiguration -A
+
+      - name: Debug logs
+        if: failure()
+        run: |
           kubectl get events --sort-by='.metadata.creationTimestamp' -A
