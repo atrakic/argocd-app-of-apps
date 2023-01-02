@@ -40,8 +40,9 @@ login: ## ArgoCD Login
 	scripts/argocd/login.sh
 
 test: ## Test app
-	argocd --server $(SERVER) --insecure app wait $(APP) guestbook
-	[ -f ./test.sh ] && ./test.sh guestbook.argocd.local
+	argocd --server $(SERVER) --insecure app wait guestbook
+	argocd --server $(SERVER) --insecure app get guestbook
+	[ -f ./tests/test.sh ] && ./tests/test.sh guestbook.argocd.local
 
 clean: ## Clean
 	kind delete cluster

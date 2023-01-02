@@ -40,13 +40,13 @@ jobs:
           make setup
           make port_forward
 
-      - name: Ensure port forward
+      - name: Ensure port forwarding
         run: curl -fiskL 127.0.0.1:8080
 
       - name: ArgoCD deploy
         run: make deploy
 
-      - name: Wait for e2e app to sattle after deployment
+      - name: Ensure e2e app is deploymed
         #if: false
         run: kubectl wait -n guestbook --for=condition=Ready pods --all --timeout=300s
 
