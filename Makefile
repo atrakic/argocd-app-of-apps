@@ -2,7 +2,7 @@ MAKEFLAGS += --silent
 
 SERVER := 127.0.0.1:8080
 
-APP ?= root
+APP ?= application
 
 .DEFAULT_GOAL := help
 
@@ -40,7 +40,7 @@ login: ## ArgoCD Login
 
 test: ## Test app
 	argocd --server $(SERVER) --insecure app wait $(APP) guestbook
-	[ -f ./tests/test.sh ] && ./tests/test.sh guestbook.argocd.local
+	[ -f ./test.sh ] && ./test.sh guestbook.argocd.local
 
 clean: ## Clean
 	kind delete cluster

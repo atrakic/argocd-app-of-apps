@@ -1,17 +1,17 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
- name: "root"
+ name: root-argo-application
  namespace: argocd
 spec:
  project: default
  source:
-  repoURL: "https://github.com/atrakic/argocd-app-of-apps"
-  targetRevision: "HEAD" # develop
-  path: apps
+  repoURL: https://github.com/atrakic/argocd-app-of-apps.git
+  targetRevision: feature/use-helm-repo # HEAD
+  path: dev
  destination:
-  server: "https://kubernetes.default.svc"
-  namespace: "root"
+  server: https://kubernetes.default.svc
+  namespace: root
  syncPolicy:
   syncOptions:
    - CreateNamespace=true
