@@ -69,4 +69,8 @@ jobs:
         if: failure()
         run: |
           kubectl get ns,po,svc,cm,sa,ValidatingWebhookConfiguration -A
+
+      - name: Debug logs
+        if: failure()
+        run: |
           kubectl get events --sort-by='.metadata.creationTimestamp' -A
