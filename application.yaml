@@ -8,7 +8,7 @@ spec:
  source:
   repoURL: https://github.com/atrakic/argocd-app-of-apps.git
   targetRevision: feature/use-helm-repo # HEAD
-  path: dev
+  path: clusters/dev
  destination:
   server: https://kubernetes.default.svc
   namespace: root
