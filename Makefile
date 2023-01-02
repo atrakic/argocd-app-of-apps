@@ -26,6 +26,7 @@ sync deploy: login ## Deploy application and sync
 	kubectl apply -f application.yaml
 	argocd --server $(SERVER) --insecure app sync $(APP)
 	argocd --server $(SERVER) --insecure app wait $(APP) infra bootstrap
+	#argocd --server $(SERVER) --insecure app wait monitoring
 	argocd --server $(SERVER) --insecure app get $(APP)
 
 undeploy: login ## Deploy application and sync
